@@ -170,42 +170,94 @@ def printSuccess(*args, bold=True, verbose=1, **kwargs):
 	"""
 	printC(*args, color="92", bold=bold, verbose=verbose, **kwargs)
 
+import os
+import builtins
+
 def printC(*args, color="21", bold=False, tab=0, clear=False, verbose=1, exit_=False, sep=" ", **kwargs):
-	"""
-	DOC
-	"""
-	# Verbose level
-	if verbose != -1 and hasattr(builtins, "verbose") and verbose > builtins.verbose:
-		return
-	# Clear line before?
-	if clear:
-		cl = "\r" + " "*getTerminalWidth() + "\r"
-	else:
-		cl = ""
+    """
+    DOC
+    """
+    # Verbose level
+    if verbose != -1 and hasattr(builtins, "verbose") and verbose > builtins.verbose:
+        return
+    # Clear line before?
+    if clear:
+        cl = "\r" + " "*getTerminalWidth() + "\r"
+    else:
+        cl = ""
 
-	if type(tab) == float:
-		tab = " "*int(tab)
-	else:
-		tab = " "*(tab*2)
+    try:
+        tab = int(tab)
+    except ValueError:
+        tab = 0  # Default value for invalid tab
 
-	if os.name == "nt":
-		print("{}{}{}".format(
-				cl,
-				" "*(tab*2),
-				sep.join(map(str, args))
-				),
-			**kwargs)
-	else:
-		print("{}{}\033[{}m\033[{}m{}\033[m".format(
-				cl,
-				tab,
-				int(bold),
-				color,
-				sep.join(map(str, args))
-				),
-			**kwargs)
+    tab = " " * (tab * 2)
 
-	if exit_: exit()
+    if os.name == "nt":
+        print("{}{}{}".format(
+            cl,
+            " " * (len(tab) * 2),
+            sep.join(map(str, args))
+        ),
+            **kwargs)
+    else:
+        print("{}{}\033[{}m\033[{}m{}\033[m".format(
+            cl,
+            tab,
+            int(bold),
+            color,
+            sep.join(map(str, args))
+        ),
+            **kwargs)
+
+    if exit_:
+        exit()
+
+
+#
+# def printC(*args, color="21", bold=False, tab=0, clear=False, verbose=1, exit_=False, sep=" ", **kwargs):
+# 	"""
+# 	DOC
+# 	"""
+# 	# Verbose level
+# 	if verbose != -1 and hasattr(builtins, "verbose") and verbose > builtins.verbose:
+# 		return
+# 	# Clear line before?
+# 	if clear:
+# 		cl = "\r" + " "*getTerminalWidth() + "\r"
+# 	else:
+# 		cl = ""
+#
+# 	if type(tab) == float:
+# 		tab = " "*int(tab)
+# 	else:
+# 		tab = " "*(tab*2)
+#
+# 	# if os.name == "nt":
+# 	# 	print("{}{}{}".format(
+# 	# 			cl,
+# 	# 			" "*(tab*2),
+# 	# 			sep.join(map(str, args))
+# 	# 			),
+# 	# 		**kwargs)
+# 	if os.name == "nt":
+# 		print("{}{}{}".format(
+# 			cl,
+# 			" " * (int(tab) * 2),
+# 			sep.join(map(str, args))
+# 		),
+# 			**kwargs)
+# 	else:
+# 		print("{}{}\033[{}m\033[{}m{}\033[m".format(
+# 				cl,
+# 				tab,
+# 				int(bold),
+# 				color,
+# 				sep.join(map(str, args))
+# 				),
+# 			**kwargs)
+#
+# 	if exit_: exit()
 
 def assertC(bool_, message, printIfFail=True, crash=True):
 	"""
